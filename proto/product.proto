@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package inventory;
+
+option go_package = "ADV3/proto/gen";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// Product service definition
+service ProductService {
+  // Create a new product
+  rpc CreateProduct(CreateProductRequest) returns (Product) {}
+  
+  // Get a product by ID
+  rpc GetProduct(GetProductRequest) returns (Product) {}
+  
+  // List all products
+  rpc ListProducts(ListProductsRequest) returns (ListProductsResponse) {}
+  
+  // Update a product
+  rpc UpdateProduct(UpdateProductRequest) returns (Product) {}
+  
+  // Delete a product
+  rpc DeleteProduct(DeleteProductRequest) returns (google.protobuf.Empty) {}
+}
+
+// Product message definition
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string image_url = 5;
+  string category = 6;
+  int32 stock = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// Request messages
+message CreateProductRequest {
+  string name = 1;
+  string description = 2;
+  double price = 3;
+  string image_url = 4;
+  string category = 5;
+  int32 stock = 6;
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message ListProductsRequest {
+  string category = 1;
+  double min_price = 2;
+  double max_price = 3;
+  int32 page = 4;
+  int32 limit = 5;
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+  string image_url = 5;
+  string category = 6;
+  int32 stock = 7;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+// Response messages
+message ListProductsResponse {
+  repeated Product products = 1;
+  int32 total = 2;
+} 
