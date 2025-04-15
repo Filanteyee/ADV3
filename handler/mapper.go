@@ -17,10 +17,10 @@ func ProtoToModel(o *orderpb.Order) *repository.Order {
 		}
 	}
 	return &repository.Order{
-		UserID:    o.GetUserId(),
-		Status:    o.GetStatus(),
-		Items:     items,
-		CreatedAt: o.GetCreatedAt(),
+		UserID: o.GetUserId(),
+		Status: o.GetStatus(),
+		Items:  items,
+		// CreatedAt will be set in grpc_handler, ignore here
 	}
 }
 

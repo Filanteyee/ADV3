@@ -2,6 +2,7 @@ package main
 
 import (
 	"ADV3/handler"
+	"ADV3/proto/gen"
 	"ADV3/proto/orderpb"
 	"ADV3/repository"
 	"ADV3/usecase"
@@ -26,11 +27,19 @@ func main() {
 	}
 
 	db := client.Database("orders_db")
-
 	repo := repository.NewOrderRepository(db)
-	uc := usecase.NewOrderUsecase(repo)
 
-	// ✅ GOROUTINE: gRPC Server (на :50051)
+	// Establish gRPC connection to ProductService
+	productConn, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("Failed to connect to ProductService: %v", err)
+	}
+	defer productConn.Close()
+	productClient := gen.NewProductServiceClient(productConn)
+
+	uc := usecase.NewOrderUsecase(repo, productClient)
+
+	// Start gRPC server
 	go func() {
 		lis, err := net.Listen("tcp", ":50051")
 		if err != nil {
@@ -46,7 +55,7 @@ func main() {
 		}
 	}()
 
-	// ✅ HTTP Server (на :8080)
+	// Start HTTP server
 	r := gin.Default()
 	r.Static("/static", "./static")
 	r.GET("/", func(c *gin.Context) {

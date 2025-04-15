@@ -1,13 +1,40 @@
 package usecase
 
-import "ADV3/repository"
+import (
+	"context"
+	"fmt"
+
+	"ADV3/proto/gen"
+	"ADV3/repository"
+)
 
 type OrderUsecase struct {
-	repo *repository.OrderRepository
+	repo           *repository.OrderRepository
+	productService gen.ProductServiceClient
 }
 
-func NewOrderUsecase(r *repository.OrderRepository) *OrderUsecase {
-	return &OrderUsecase{repo: r}
+func NewOrderUsecase(repo *repository.OrderRepository, productClient gen.ProductServiceClient) *OrderUsecase {
+	return &OrderUsecase{
+		repo:           repo,
+		productService: productClient,
+	}
+}
+
+func (u *OrderUsecase) CreateOrder(order *repository.Order) (string, error) {
+	ctx := context.Background()
+
+	// Validate each product
+	for _, item := range order.Items {
+		resp, err := u.productService.GetProduct(ctx, &gen.GetProductRequest{Id: item.ProductID})
+		if err != nil {
+			return "", fmt.Errorf("product %s not found: %v", item.ProductID, err)
+		}
+		if resp.Stock < int32(item.Quantity) {
+			return "", fmt.Errorf("product %s out of stock (have %d, need %d)", item.ProductID, resp.Stock, item.Quantity)
+		}
+	}
+
+	return u.repo.Create(order)
 }
 
 func (u *OrderUsecase) GetAllOrders() ([]repository.Order, error) {
@@ -24,8 +51,4 @@ func (u *OrderUsecase) UpdateStatus(id string, status string) error {
 
 func (u *OrderUsecase) DeleteOrder(id string) error {
 	return u.repo.Delete(id)
-}
-
-func (u *OrderUsecase) CreateOrder(order *repository.Order) (string, error) {
-	return u.repo.Create(order)
 }

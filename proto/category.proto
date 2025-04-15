@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package inventory;
+
+option go_package = "github.com/Mnebezsaxara/KazakhExpress/inventory-service/proto/gen";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "product.proto";
+
+// Category service definition
+service CategoryService {
+  // Create a new category
+  rpc CreateCategory(CreateCategoryRequest) returns (Category) {}
+  
+  // Get a category by ID
+  rpc GetCategory(GetCategoryRequest) returns (Category) {}
+  
+  // List all categories
+  rpc ListCategories(google.protobuf.Empty) returns (ListCategoriesResponse) {}
+  
+  // Delete a category
+  rpc DeleteCategory(DeleteCategoryRequest) returns (google.protobuf.Empty) {}
+
+  // Get products by category
+  rpc GetProductsByCategory(GetProductsByCategoryRequest) returns (ListProductsResponse) {}
+}
+
+// Category message definition
+message Category {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 product_count = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// Request messages
+message CreateCategoryRequest {
+  string name = 1;
+  string description = 2;
+}
+
+message GetCategoryRequest {
+  string id = 1;
+}
+
+message DeleteCategoryRequest {
+  string id = 1;
+}
+
+message GetProductsByCategoryRequest {
+  string category_id = 1;
+  int32 page = 2;
+  int32 limit = 3;
+}
+
+// Response messages
+message ListCategoriesResponse {
+  repeated Category categories = 1;
+  int32 total = 2;
+} 

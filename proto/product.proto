@@ -2,10 +2,11 @@ syntax = "proto3";
 
 package inventory;
 
-option go_package = "ADV3/proto/gen";
+option go_package = "github.com/Mnebezsaxara/KazakhExpress/inventory-service/proto/gen";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
+
 
 // Product service definition
 service ProductService {

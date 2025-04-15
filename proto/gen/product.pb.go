@@ -577,7 +577,7 @@ const file_product_proto_rawDesc = "" +
 	"GetProduct\x12\x1c.inventory.GetProductRequest\x1a\x12.inventory.Product\"\x00\x12Q\n" +
 	"\fListProducts\x12\x1e.inventory.ListProductsRequest\x1a\x1f.inventory.ListProductsResponse\"\x00\x12F\n" +
 	"\rUpdateProduct\x12\x1f.inventory.UpdateProductRequest\x1a\x12.inventory.Product\"\x00\x12J\n" +
-	"\rDeleteProduct\x12\x1f.inventory.DeleteProductRequest\x1a\x16.google.protobuf.Empty\"\x00B\x10Z\x0eADV3/proto/genb\x06proto3"
+	"\rDeleteProduct\x12\x1f.inventory.DeleteProductRequest\x1a\x16.google.protobuf.Empty\"\x00BCZAgithub.com/Mnebezsaxara/KazakhExpress/inventory-service/proto/genb\x06proto3"
 
 var (
 	file_product_proto_rawDescOnce sync.Once

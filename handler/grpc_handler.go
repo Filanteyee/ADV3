@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"time"
 
 	"ADV3/proto/orderpb"
 	"ADV3/usecase"
@@ -24,6 +25,8 @@ func NewGRPCOrderServer(uc *usecase.OrderUsecase) *GRPCOrderServer {
 func (s *GRPCOrderServer) CreateOrder(ctx context.Context, req *orderpb.CreateOrderRequest) (*orderpb.CreateOrderResponse, error) {
 	log.Printf("[gRPC] CreateOrder called with user_id=%s", req.Order.UserId)
 	order := ProtoToModel(req.GetOrder())
+	order.CreatedAt = time.Now().Unix() // ✅ Устанавливаем время
+
 	id, err := s.Usecase.CreateOrder(order)
 	if err != nil {
 		log.Printf("[gRPC][ERROR] Failed to create order: %v", err)
